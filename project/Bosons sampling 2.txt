@@ -1,0 +1,337 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "684ec930-4f6f-4726-9ca0-531ba8e035fc",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<svg width='356.000000' height='150.000000' viewBox='-3.000000 0.000000 353.000000 150.000000'><path d=\"M 10 25 L 25 25\" fill=\"none\" stroke=\"black\" stroke-width=\"1.000000\" stroke-linejoin=\"miter\"/>\n",
+       "<path d=\"M 10 75 L 25 75\" fill=\"none\" stroke=\"black\" stroke-width=\"1.000000\" stroke-linejoin=\"miter\"/>\n",
+       "<path d=\"M 37.9442 25.0002 C 51.653800000000004 25.0002 51.5923 50.0 65.3019 50.0 M 65.3038 50.0 C 51.59219999999999 50.0 51.6538 74.9998 37.94409999999999 74.9998 M 65.3038 49.99999999999999 L 87.1884 49.99999999999999 M 87.1884 49.99999999999999 C 100.9 49.99999999999999 100.83840000000001 25.000199999999992 114.5481 25.000199999999992 M 87.1884 49.99999999999999 C 100.9 49.99999999999999 100.83840000000001 74.9998 114.5481 74.9998 M 25.0 24.999999999999993 L 38.0 24.999999999999993 M 38.0019 74.9998 L 25.0 74.9998 M 112.6453 74.9998 L 125.0 74.9998 M 112.1944 24.999799999999993 L 125.0 24.999799999999993\" fill=\"none\" stroke=\"black\" stroke-width=\"1.000000\" stroke-linejoin=\"miter\"/>\n",
+       "<text x=\"75.000000\" y=\"38.000000\" font-size=\"7.000000\"  text-anchor=\"middle\"></text>\n",
+       "<path d=\"M 125 25 L 145 25 M 155 25 L 175 25\" fill=\"none\" stroke=\"black\" stroke-width=\"1.000000\" stroke-linejoin=\"miter\"/>\n",
+       "<path d=\"M 140 35 L 160 35 L 160 15 L 140 15 L 140 35\" fill=\"lightgray\" stroke=\"black\" stroke-width=\"1.000000\" stroke-linejoin=\"miter\"/>\n",
+       "<text x=\"150.000000\" y=\"44.000000\" font-size=\"7.000000\"  text-anchor=\"middle\">Φ=φ_a</text>\n",
+       "<polyline points=\"125 75 175 75\" fill=\"transparent\" stroke=\"black\" stroke-width=\"1.000000\" stroke-linejoin=\"miter\" />\n",
+       "<path d=\"M 187.9442 25.0002 C 201.6538 25.0002 201.5923 50.0 215.3019 50.0 M 215.3038 50.0 C 201.5922 50.0 201.6538 74.9998 187.9441 74.9998 M 215.3038 49.99999999999999 L 237.1884 49.99999999999999 M 237.1884 49.99999999999999 C 250.9 49.99999999999999 250.8384 25.000199999999992 264.5481 25.000199999999992 M 237.18839999999997 49.99999999999999 C 250.89999999999998 49.99999999999999 250.83839999999998 74.9998 264.5481 74.9998 M 174.99999999999997 24.999999999999993 L 187.99999999999997 24.999999999999993 M 188.00189999999998 74.9998 L 174.99999999999997 74.9998 M 262.64529999999996 74.9998 L 274.99999999999994 74.9998 M 262.1944 24.999799999999993 L 275.0 24.999799999999993\" fill=\"none\" stroke=\"black\" stroke-width=\"1.000000\" stroke-linejoin=\"miter\"/>\n",
+       "<text x=\"225.000000\" y=\"38.000000\" font-size=\"7.000000\"  text-anchor=\"middle\"></text>\n",
+       "<path d=\"M 275 75 L 295 75 M 305 75 L 325 75\" fill=\"none\" stroke=\"black\" stroke-width=\"1.000000\" stroke-linejoin=\"miter\"/>\n",
+       "<path d=\"M 290 85 L 310 85 L 310 65 L 290 65 L 290 85\" fill=\"lightgray\" stroke=\"black\" stroke-width=\"1.000000\" stroke-linejoin=\"miter\"/>\n",
+       "<text x=\"300.000000\" y=\"94.000000\" font-size=\"7.000000\"  text-anchor=\"middle\">Φ=φ_b</text>\n",
+       "<polyline points=\"275 25 325 25\" fill=\"transparent\" stroke=\"black\" stroke-width=\"1.000000\" stroke-linejoin=\"miter\" />\n",
+       "<path d=\"M 325 25 L 340 25\" fill=\"none\" stroke=\"black\" stroke-width=\"1.000000\" stroke-linejoin=\"miter\"/>\n",
+       "<path d=\"M 325 75 L 340 75\" fill=\"none\" stroke=\"black\" stroke-width=\"1.000000\" stroke-linejoin=\"miter\"/>\n",
+       "<text x=\"350.000000\" y=\"25.000000\" font-size=\"6.000000\"  text-anchor=\"end\">0</text>\n",
+       "<text x=\"350.000000\" y=\"75.000000\" font-size=\"6.000000\"  text-anchor=\"end\">1</text>\n",
+       "<text x=\"0.000000\" y=\"25.000000\" font-size=\"6.000000\"  text-anchor=\"start\">0</text>\n",
+       "<text x=\"0.000000\" y=\"75.000000\" font-size=\"6.000000\"  text-anchor=\"start\">1</text></svg>"
+      ],
+      "text/plain": [
+       "<IPython.core.display.HTML object>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "from IPython import display\n",
+    "from collections import Counter\n",
+    "from tabulate import tabulate\n",
+    "from tqdm.auto import tqdm\n",
+    "import gzip\n",
+    "import pickle\n",
+    "import time\n",
+    "\n",
+    "import sympy as sp\n",
+    "import random\n",
+    "\n",
+    "import perceval as pcvl\n",
+    "import perceval.lib.symb as symb\n",
+    "n = 14       #number of photons at the input\n",
+    "m = 50      #number of modes\n",
+    "N = 5000000  #number of samplings\n",
+    "Unitary_60 = pcvl.Matrix.random_unitary(m) #creates a random unitary of dimension 60\n",
+    "mzi = (symb.BS() // (0, symb.PS(phi=pcvl.Parameter(\"φ_a\")))\n",
+    "       // symb.BS() // (1, symb.PS(phi=pcvl.Parameter(\"φ_b\"))))\n",
+    "pcvl.pdisplay(mzi)\n",
+    "Linear_Circuit_60 = pcvl.Circuit.decomposition(Unitary_60, mzi,\n",
+    "                                               phase_shifter_fn=symb.PS,\n",
+    "                                               shape=\"triangle\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "24529b73-eeb9-4209-97a9-e366ae351946",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "Sampling_Backend = pcvl.BackendFactory().get_backend(\"CliffordClifford2017\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "c3ff4270-6127-4e56-9af7-46c56bd85805",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The input state:  |1,0,0,0,0,0,0,1,0,1,0,1,0,0,0,1,0,0,1,1,1,0,1,1,0,1,0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0>\n"
+     ]
+    }
+   ],
+   "source": [
+    "#one can choose which mode he/she wants at input, or we can choose it randomly\n",
+    "def Generating_Input(n, m, modes = None):\n",
+    "    \"This function randomly chooses an input with n photons in m modes.\"\n",
+    "    if modes == None :\n",
+    "        modes = sorted(random.sample(range(m),n))\n",
+    "    state = \"|\"\n",
+    "    for i in range(m):\n",
+    "        state = state + \"0\"*(1 - (i in modes)) +\"1\"*(i in modes)+ \",\"*(i < m-1)\n",
+    "    return pcvl.BasicState(state + \">\")\n",
+    "\n",
+    "input_state = Generating_Input(n, m)\n",
+    "print(\"The input state: \", input_state)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "f7477b56-4a79-4cd6-9a2d-579d3b84cbc0",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "|1,0,0,0,0,0,0,1,0,1,0,1,0,0,0,1,0,0,1,1,1,0,1,1,0,1,0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0>\n"
+     ]
+    }
+   ],
+   "source": [
+    "s1 = input_state\n",
+    "print(s1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "993a636d-95d3-46bf-bc0b-058314b3b014",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "|1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,1,1>\n"
+     ]
+    }
+   ],
+   "source": [
+    "input_state = Generating_Input(n, m)\n",
+    "#print(\"The input state: \", input_state)\n",
+    "s2 = input_state\n",
+    "print(s2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "98bad300-3e9d-418a-ace4-9331cc783fc0",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "coding = []\n",
+    "for i in range(1, 50):\n",
+    "    if 1:\n",
+    "        coding.append('0')\n",
+    "    elif 2:\n",
+    "        coding.append('1') \n",
+    "    else: coding.append('*')\n",
+    "    #else coding[i] = '*'\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "9de76b14-466c-4009-a49d-7d1ab2c8014e",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "|1,0,0,0,0,0,0,1,0,1,0,1,0,0,0,1,0,0,1,1,1,0,1,1,0,1,0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0>\n",
+      "|1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,1,1>\n",
+      "['*', '*', '*', '1', '*', '*', '*', '0', '*', '0', '*', '0', '*', '*', '1', '*', '*', '*', '0', '*', '0', '*', '0', '0', '*', '*', '1', '1', '1', '*', '0', '0', '*', '*', '0', '1', '*', '*', '*', '*', '1', '*', '*', '*', '*', '*', '*', '1', '1', '1']\n",
+      "The final qauntum random number 10001000011100011111\n"
+     ]
+    }
+   ],
+   "source": [
+    "\n",
+    "coding = []\n",
+    "for i in range(0, 50):\n",
+    "    if s1[i] == 1 and s2[i] == 0:\n",
+    "        coding.append('0')\n",
+    "    elif s1[i] == 0 and s2[i] == 1:\n",
+    "        coding.append('1') \n",
+    "    else: coding.append('*')\n",
+    "    #else coding[i] = '*'\n",
+    "print(s1)\n",
+    "print(s2)\n",
+    "print(coding)\n",
+    "\n",
+    "r = ''\n",
+    "for i in coding:\n",
+    "    if i != '*':\n",
+    "       # r.append(i)\n",
+    "        r = r + i\n",
+    "print(\"The final qauntum random number\", r)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "50e8f985-b92a-4e71-b991-a2b99eb7b03b",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#print(\"The sampled outputs are:\")\n",
+    "#S1 =  pcvl.BasicState(\"|>\")\n",
+    "#for _ in range(10):\n",
+    "    #print(Sampling_Backend(Unitary_60).sample(input_state))\n",
+    "   \n",
+    " #print(S1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "4f04a018-f808-41df-adf2-5a6440a899c7",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#R1 = Sampling_Backend(Unitary_60).sample(input_state)\n",
+    "#print(R1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "9e5725e6-7c02-4f7f-a3d4-9517a47757b8",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "0bb13c10-a5ec-4953-b2e0-14540de1b8a4",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# if we want to launch parallel process\n",
+    "worker_id=1\n",
+    "\n",
+    "#store the input and the unitary\n",
+    "with open(\"%dphotons_%dmodes_%dsamples-worker%s-unitary.pkl\" %(n,m,N,worker_id), 'wb') as f:\n",
+    "    pickle.dump(Unitary_60, f)\n",
+    "\n",
+    "with open(\"%dphotons_%dmodes_%dsamples-worker%s-inputstate.pkl\" %(n,m,N,worker_id), 'w') as f:\n",
+    "    f.write(str(input_state)+\"\\n\")\n",
+    "\n",
+    "\n",
+    "with gzip.open(\"%dphotons_%dmodes_%dsamples-worker%s-samples.txt.gz\" %(n,m,N,worker_id), 'wb') as f:\n",
+    "    start = time.time()\n",
+    "    for i in range(N):\n",
+    "        f.write((str(Sampling_Backend(Unitary_60).sample(pcvl.BasicState(input_state)))+\"\\n\").encode());\n",
+    "    end = time.time()\n",
+    "    f.write(str(\"==> %d\\n\" % (end-start)).encode())\n",
+    "f.close()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "5a960e1e-ff31-4bfa-a258-d03f9f4444ae",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import gzip"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "bda34f5c-46b1-46a4-9a18-db3cf0bffff4",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "5000000 samples\n",
+      "Bunching Distribution: 0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t1\t0\t6\t4\t15\t35\t38\t103\t69\t187\t188\t361\t586\t661\t1360\t1398\t2470\t4121\t6296\t6934\t11287\t16185\t19581\t38992\t46632\t42052\t83420\t88821\t186404\t137255\t321115\t180406\t370728\t477893\t743188\t821602\t1389606\n"
+     ]
+    }
+   ],
+   "source": [
+    "worker_id = 1\n",
+    "count = 0\n",
+    "bunching_distribution = Counter()\n",
+    "\n",
+    "with gzip.open(\"%dphotons_%dmodes_%dsamples-worker%s-samples.txt.gz\"%(n,m,N,worker_id), \"rt\") as f:\n",
+    "    for l in f:\n",
+    "        l = l.strip()\n",
+    "        if l.startswith(\"|\") and l.endswith(\">\"):\n",
+    "            try:\n",
+    "                st = pcvl.BasicState(l)\n",
+    "                count+=1\n",
+    "                bunching_distribution[st.photon2mode(st.n-1)]+=1\n",
+    "            except Exception:\n",
+    "                pass\n",
+    "print(count, \"samples\")\n",
+    "print(\"Bunching Distribution:\", \"\\t\".join([str(bunching_distribution[k]) for k in range(m)]))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "8290cd1a-14b5-4c81-8d50-68f5a6ffc73b",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 [Womanium]",
+   "language": "python",
+   "name": "python3_womanium_go14xk"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.10"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
